@@ -7,7 +7,7 @@ from src.auth import get_email
 
 
 app = FastAPI(
-    title="Tochka Interesa file server"
+    title="Tochka Interesa File Server"
 )
 
 
@@ -35,11 +35,6 @@ def load_avatar(
     save(avatar, email + ".jpg")
     set_avatar_field(email, True)
     return "OK"
-
-
-@app.get("/test")
-def test(email: str = Depends(get_email)):
-    return email
 
 
 @app.post("/remove_avatar")

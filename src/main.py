@@ -5,10 +5,11 @@ from src.files import try_load, save, delete
 from src.database import create_connection
 from src.auth import get_email
 
-import os.path
 
+app = FastAPI(
+    title="Tochka Interesa file server"
+)
 
-app = FastAPI()
 
 
 def set_avatar_field(email: str, value: bool):
@@ -18,6 +19,7 @@ def set_avatar_field(email: str, value: bool):
         set has_avatar = {1 if value else 0}
         where email = '{email}'""")
         db.commit()
+
 
 
 @app.get("/avatar")
@@ -33,6 +35,11 @@ def load_avatar(
     save(avatar, email + ".jpg")
     set_avatar_field(email, True)
     return "OK"
+
+
+@app.get("/test")
+def test(email: str = Depends(get_email)):
+    return email
 
 
 @app.post("/remove_avatar")

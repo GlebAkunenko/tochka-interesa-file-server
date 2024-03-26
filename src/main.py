@@ -11,17 +11,6 @@ app = FastAPI(
 )
 
 
-
-def set_avatar_field(email: str, value: bool):
-    with create_connection() as db, db.cursor(dictionary=True) as cursor:
-        cursor.execute(f"""
-        update users
-        set has_avatar = {1 if value else 0}
-        where email = '{email}'""")
-        db.commit()
-
-
-
 @app.get("/avatar")
 def get_avatar(email: str) -> FileResponse:
     return try_load(email + ".jpg")
@@ -33,12 +22,10 @@ def load_avatar(
     email = Depends(get_email)
 ):
     save(avatar, email + ".jpg")
-    set_avatar_field(email, True)
     return "OK"
 
 
 @app.post("/remove_avatar")
 def remove_avatar(email: str = Depends(get_email)):
     delete(email + ".jpg")
-    set_avatar_field(email, False)
     return "OK"

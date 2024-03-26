@@ -7,8 +7,6 @@ from jose import JWTError, jwt
 
 import src.config as config
 
-
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth")
 security = HTTPBearer()
 
 def get_email(authorization: Annotated[HTTPAuthorizationCredentials, Depends(security)]) -> str:

@@ -13,7 +13,10 @@ app = FastAPI(
 
 @app.get("/avatar")
 def get_avatar(email: str) -> FileResponse:
-    return try_load(email + ".jpg")
+    avatar = try_load(email + ".jpg")
+    if avatar:
+        return avatar
+    return try_load("default.jpg")
 
 
 @app.post("/add_avatar")

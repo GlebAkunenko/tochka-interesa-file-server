@@ -2,8 +2,9 @@ from fastapi import FastAPI, Depends, UploadFile
 from fastapi.responses import FileResponse
 
 from src.files import try_load, save, delete
-from src.database import create_connection
 from src.auth import get_email
+import src.config as config
+import requests
 
 
 app = FastAPI(
@@ -32,3 +33,19 @@ def load_avatar(
 def remove_avatar(email: str = Depends(get_email)):
     delete(email + ".jpg")
     return "OK"
+
+
+@app.on_event("startup")
+async def start_up():
+    try:
+        requests.post(config.start_request)
+    except:
+        pass
+
+
+@app.on_event("shutdown")
+def on_shutdown():
+    try:
+        requests.post(config.stop_request)
+    except:
+        pass
